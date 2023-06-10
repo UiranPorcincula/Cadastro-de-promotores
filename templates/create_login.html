@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Criar Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        h1 {
+            margin-top: 50px;
+        }
+
+        form {
+            margin-top: 50px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            padding: 5px;
+            width: 200px;
+        }
+
+        input[type="submit"] {
+            margin-top: 10px;
+            padding: 5px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Criar Login</h1>
+    <form action="/create_login" method="post">
+        <label for="cpf">CPF:</label>
+        <input type="text" name="cpf" id="cpf" required><br>
+        <label for="password">Senha:</label>
+        <input type="password" name="password" id="password" required><br>
+        <input type="submit" value="Criar Login">
+    </form>
+</body>
+</html>

@@ -1,0 +1,25 @@
+body {
+    text-align: center;
+}
+.form-container {
+    display: inline-block;
+    text-align: left;
+    margin-top: 20px;
+}
+.form-container label {
+    margin-top: 10px;
+}
+.form-container input[type="text"],
+.form-container input[type="password"] {
+    width: 200px;
+    padding: 5px;
+}
+.error-message {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+}
+.form-container button {
+    margin-top: 10px;
+    padding: 5px 10px;
+}

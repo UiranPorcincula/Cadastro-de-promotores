@@ -1,0 +1,22 @@
+.custom-navbar {
+    background-color: #DB70DB;
+}
+
+body {
+    padding-top: 30px;
+}
+
+.container {
+    margin-top: 0px;
+}
+
+.logo {
+    width: 50px;
+    height: 50px;
+}
+.custom-link {
+    color: #ffffff !important;
+    font-family: Arial, sans-serif;
+    text-decoration: underline;
+}
+

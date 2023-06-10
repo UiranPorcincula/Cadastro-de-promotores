@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Editar</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/navbar.css">
+</head>
+<body>
+    {% include 'navbar.html' %}
+    <div class="container-fluid mt-3">
+        <div class="mb-3">
+        <h1>Editar Pessoa</h1>
+        <form method="POST" action="/edit/{{ pessoa.id }}">
+            <div class="mb-3">
+                <label for="nome" class="form-label">Nome:</label>
+                <input type="text" class="form-control" id="nome" name="nome" value="{{ pessoa.nome }}" required readonly>
+            </div>
+            <div class="mb-3">
+                <label for="cargo" class="form-label">Cargo:</label>
+                <input type="text" class="form-control" id="cargo" name="cargo" value="{{ pessoa.cargo }}" required readonly>
+            </div>
+            <div class="mb-3">
+                <label for="modalidade" class="form-label">Modalidade:</label>
+                <input type="text" class="form-control" id="modalidade" name="modalidade" value="{{ pessoa.modalidade }}" required readonly>
+            </div>
+            <div class="mb-3">
+                <label for="salario" class="form-label">Salário:</label>
+                <input type="text" class="form-control" id="salario" name="salario" value="{{ pessoa.salario }}" required readonly>
+            </div>
+            <div class="mb-3">
+                <label for="cpf" class="form-label">CPF:</label>
+                <input type="text" class="form-control" id="cpf" name="cpf" value="{{ pessoa.cpf }}" required readonly>
+            </div>
+            <div class="mb-3">
+                <label for="rg" class="form-label">RG:</label>
+                <input type="text" class="form-control" id="rg" name="rg" value="{{ pessoa.rg }}" required readonly>
+            </div>
+            <div class="mb-3">
+                <label for="endereco" class="form-label">Endereço:</label>
+                <input type="text" class="form-control" id="endereco" name="endereco" value="{{ pessoa.endereco }}" required readonly>
+            </div>
+            <div class="mb-3">
+                <label for="bairro" class="form-label">Bairro:</label>
+                <input type="text" class="form-control" id="bairro" name="bairro" value="{{ pessoa.bairro }}" required readonly>
+            </div>
+            <div class="mb-3">
+                <label for="cidade" class="form-label">Cidade:</label>
+                <input type="text" class="form-control" id="cidade" name="cidade" value="{{ pessoa.cidade }}" required readonly>
+            </div>
+            <div class="mb-3">
+                <label for="cep" class="form-label">CEP:</label>
+                <input type="text" class="form-control" id="cep" name="cep" value="{{ pessoa.cep }}" required readonly>
+            </div>
+            <div class="mb-3">
+                <label for="banco" class="form-label">Banco:</label>
+                <input type="text" class="form-control" id="banco" name="banco" value="{{ pessoa.banco }}" required readonly>
+            </div>
+            <div class="mb-3">
+                <label for="pix" class="form-label">PIX:</label>
+                <input type="text" class="form-control" id="pix" name="pix" value="{{ pessoa.pix }}" required readonly>
+            </div>
+            <div class="mb-3">
+                <label for="data_pagamento" class="form-label">Data de Pagamento:</label>
+                <input type="text" class="form-control" id="data_pagamento" name="data_pagamento" value="{{ pessoa.data_pagamento }}" required readonly>
+            </div>
+            <div class="mb-3">
+                <button type="button" class="btn btn-primary" id="editarBtn" enabled>Editar</button>
+                <button type="submit" class="btn btn-primary" id="salvarBtn" disabled>Salvar</button>
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal">Excluir</button>
+                <a href="/lista" class="btn btn-primary">Voltar</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteConfirmationModalLabel">Confirmação de Exclusão</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Você tem certeza que deseja excluir esta pessoa?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <a href="/delete/{{ pessoa.id }}" class="btn btn-danger">Excluir</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Obter a data atual
+        var currentDate = new Date();
+
+        // Obter a hora atual
+        var currentHour = currentDate.getHours();
+
+        // Definir a saudação de acordo com a hora atual
+        var greeting = "";
+        if (currentHour < 12) {
+            greeting = "Bom dia";
+        } else if (currentHour < 18) {
+            greeting = "Boa tarde";
+        } else {
+            greeting = "Boa noite";
+        }
+
+        // Atualizar o elemento HTML com a saudação
+        document.getElementById("greeting").textContent = greeting;
+
+        // Obtém o nome do usuário
+        username.textContent = "{{ session['username'][0].upper() + session['username'][1:] }}";
+
+        // Habilitar o botão de editar e desabilitar o botão de salvar
+        document.getElementById("editarBtn").addEventListener("click", function() {
+            document.getElementById("nome").removeAttribute("readonly");
+            document.getElementById("cargo").removeAttribute("readonly");
+            document.getElementById("modalidade").removeAttribute("readonly");
+            document.getElementById("salario").removeAttribute("readonly");
+            document.getElementById("cpf").removeAttribute("readonly");
+            document.getElementById("rg").removeAttribute("readonly");
+            document.getElementById("endereco").removeAttribute("readonly");
+            document.getElementById("bairro").removeAttribute("readonly");
+            document.getElementById("cidade").removeAttribute("readonly");
+            document.getElementById("cep").removeAttribute("readonly");
+            document.getElementById("banco").removeAttribute("readonly");
+            document.getElementById("pix").removeAttribute("readonly");
+            document.getElementById("data_pagamento").removeAttribute("readonly");
+
+            document.getElementById("editarBtn").disabled = true;
+            document.getElementById("salvarBtn").disabled = false;
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
