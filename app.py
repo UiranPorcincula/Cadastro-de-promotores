@@ -1,5 +1,8 @@
-from flask import Flask, render_template, request, redirect, session, url_for
+from flask import Flask, render_template, request, redirect, session
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import and_
+import sqlite3
+from sqlalchemy import or_  # Importe a função 'or_' do SQLAlchemy
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:0000@localhost/rebeka'
@@ -30,9 +33,82 @@ class Login(db.Model):
     username = db.Column(db.String(20), unique=True)
     password = db.Column(db.String(50))
 
+class Roteiros(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    funcionario = db.Column(db.String(20))
+    dia_semana = db.Column(db.String(20))
+    lojas = db.Column(db.String(20))
+    cidade = db.Column(db.String(20))
+    regiao = db.Column(db.String(20))
+
+@app.route('/roteiros')
+def roteiros():
+    # Recuperar os dados dos roteiros do banco de dados
+    roteiros = Roteiros.query.all()
+
+    # Renderizar o template HTML e passar os dados dos roteiros para exibição
+    return render_template('roteiros.html', roteiros=roteiros)
+
+@app.route('/roteiros/<funcionario>', methods=['GET', 'POST'])
+def buscar_roteiros(funcionario):
+    if not funcionario:
+        # Renderizar o template com a coluna "funcionario" visível
+        roteiros = Roteiros.query.all()
+        return render_template('roteiros.html', roteiros=roteiros)
+    else:
+        if request.method == 'POST':
+            dia_semana = request.form.get('dia_semana')
+            if dia_semana:
+                roteiros = Roteiros.query.filter(and_(Roteiros.funcionario == funcionario, Roteiros.dia_semana == dia_semana)).all()
+            else:
+                roteiros = Roteiros.query.filter(Roteiros.funcionario == funcionario).all()
+        else:
+            roteiros = Roteiros.query.filter(and_(Roteiros.funcionario == funcionario, Roteiros.dia_semana.in_(["segunda", "terca", "quarta", "quinta", "sexta", "sabado"]))).all()
+
+        if request.method == 'POST' and 'update_id' in request.form:
+            update_id = int(request.form['update_id'])
+            roteiro = Roteiros.query.get(update_id)
+            if roteiro:
+                roteiro.dia_semana = request.form['update_dia_semana']
+                roteiro.lojas = request.form['update_lojas']
+                roteiro.cidade = request.form['update_cidade']
+                roteiro.regiao = request.form['update_regiao']
+                db.session.commit()
+                return redirect('/roteiros/' + funcionario)
+
+        return render_template('roteiros_promotor.html', roteiros=roteiros, funcionario=funcionario)
+
+class Lojas(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    funcionario = db.Column(db.String(50))
+    loja = db.Column(db.String(50))
+    cidade = db.Column(db.String(50))
+    endereco = db.Column(db.String(100))
+    regiao = db.Column(db.String(50))
+    bairro = db.Column(db.String(50))
+
+@app.route('/lojas', methods=['GET', 'POST'])
+def lojas():
+    if request.method == 'POST':
+        pesquisa = request.form['pesquisa']
+        resultados = Lojas.query.filter(or_(
+            Lojas.funcionario.ilike('%{}%'.format(pesquisa)),
+            Lojas.loja.ilike('%{}%'.format(pesquisa)),
+            Lojas.cidade.ilike('%{}%'.format(pesquisa)),
+            Lojas.endereco.ilike('%{}%'.format(pesquisa)),
+            Lojas.regiao.ilike('%{}%'.format(pesquisa)),
+            Lojas.bairro.ilike('%{}%'.format(pesquisa))
+        )).all()
+
+        return render_template('lojas.html', resultados=resultados)
+
+    return render_template('lojas.html')
+
+
+
 @app.route('/', methods=['GET', 'POST'])
 def login():
-
+    
     if request.method == 'POST':
         if 'cpf' in request.form:  # Verifica se é uma submissão de cadastro
             cpf = request.form['cpf']

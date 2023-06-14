@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Roteiros do Promotor</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../static/navbar.css">
+  <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+  {% include 'navbar.html' %}
+  <div class="container-fluid container_roteiros_promotor">
+    <div class="mb-3">
+      <h1>Roteiros</h1>
+
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Funcionário</th>
+            <th>Dia da Semana</th>
+            <th>Lojas</th>
+            <th>Cidade</th>
+            <th>Região</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for roteiro in roteiros %}
+          <tr>
+            <td><a href="{{ url_for('buscar_roteiros', funcionario=roteiro.funcionario) }}" target="_blank">{{ roteiro.funcionario }}</a></td>
+            <td>{{ roteiro.dia_semana }}</td>
+            <td>{{ roteiro.lojas|replace('*', '<br>')|safe }}</td>
+            <td>{{ roteiro.cidade }}</td>
+            <td>{{ roteiro.regiao }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
+  <script>
+    // Obter a data atual
+    var currentDate = new Date();
+
+    // Obter a hora atual
+    var currentHour = currentDate.getHours();
+
+    // Definir a saudação de acordo com a hora atual
+    var greeting = "";
+    if (currentHour < 12) {
+        greeting = "Bom dia";
+    } else if (currentHour < 18) {
+        greeting = "Boa tarde";
+    } else {
+        greeting = "Boa noite";
+    }
+
+    // Atualizar o elemento HTML com a saudação
+    document.getElementById("greeting").textContent = greeting;
+
+    // Obtém o nome do usuário
+    username.textContent = "{{ session['username'][0].upper() + session['username'][1:] }}";
+    </script>
+  
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.1/js/bootstrap.min.js"></script>
+</body>
+</html>

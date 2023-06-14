@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Roteiros do Promotor</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../static/navbar.css">
+  <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+  {% include 'navbar.html' %}
+  <div class="container-fluid container_roteiros_promotor">
+    <div class="mb-3">
+      <h1>Roteiros do Promotor - {{ funcionario }}</h1>
+      <div id="accordion" class="mt-4">
+        {% for roteiro in roteiros %}
+        <div class="card">
+          <div class="card-header" id="heading{{ loop.index }}">
+            <h5 class="mb-0">
+              <button class="btn btn-outline-primary" data-toggle="collapse" data-target="#collapse{{ loop.index }}" aria-expanded="true" aria-controls="collapse{{ loop.index }}">
+                {{ roteiro.dia_semana }}
+              </button>
+            </h5>
+          </div>
+
+          <div id="collapse{{ loop.index }}" class="collapse" aria-labelledby="heading{{ loop.index }}" data-parent="#accordion">
+            <div class="card-body">
+              <p class="card-text"><strong>Lojas:<br></strong> <span id="lojas{{ loop.index }}" contenteditable="true">{{ roteiro.lojas|replace('*', '<br>')|safe }}</span></p>
+              <p class="card-text"><strong>Cidade:</strong> <span contenteditable="true">{{ roteiro.cidade }}</span></p>
+              <p class="card-text"><strong>Região:</strong> <span contenteditable="true">{{ roteiro.regiao }}</span></p>
+              <div class="row">
+                <div class="col-md-6">
+                  <form method="POST" action="{{ url_for('buscar_roteiros', funcionario=funcionario) }}">
+                    <input type="hidden" name="update_id" value="{{ roteiro.id }}">
+                    <input type="text" name="update_dia_semana" value="{{ roteiro.dia_semana }}">
+                    <input type="text" name="update_lojas" value="{{ roteiro.lojas }}">
+                    <input type="text" name="update_cidade" value="{{ roteiro.cidade }}">
+                    <input type="text" name="update_regiao" value="{{ roteiro.regiao }}">
+                    <button class="btn btn-primary" type="submit">Editar</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirmação Modal -->
+  <div id="confirmationModal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Confirmação de Salvamento</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p id="confirmationMessage"></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.1/js/bootstrap.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      var accordionButtons = document.querySelectorAll('[data-toggle="collapse"]');
+      accordionButtons.forEach(function(button) {
+        button.addEventListener("click", function() {
+          var target = document.querySelector(this.getAttribute("data-target"));
+          if (target.classList.contains("show")) {
+            target.classList.remove("show");
+          } else {
+            target.classList.add("show");
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>
