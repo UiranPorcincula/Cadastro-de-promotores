@@ -87,22 +87,34 @@ class Lojas(db.Model):
     regiao = db.Column(db.String(50))
     bairro = db.Column(db.String(50))
 
+
+def buscar_lojas(pesquisa):
+    resultados = Lojas.query.filter(or_(
+        Lojas.funcionario.ilike('%{}%'.format(pesquisa)),
+        Lojas.loja.ilike('%{}%'.format(pesquisa)),
+        Lojas.cidade.ilike('%{}%'.format(pesquisa)),
+        Lojas.endereco.ilike('%{}%'.format(pesquisa)),
+        Lojas.regiao.ilike('%{}%'.format(pesquisa)),
+        Lojas.bairro.ilike('%{}%'.format(pesquisa))
+    )).all()
+    return resultados
+
+
 @app.route('/lojas', methods=['GET', 'POST'])
 def lojas():
     if request.method == 'POST':
         pesquisa = request.form['pesquisa']
-        resultados = Lojas.query.filter(or_(
-            Lojas.funcionario.ilike('%{}%'.format(pesquisa)),
-            Lojas.loja.ilike('%{}%'.format(pesquisa)),
-            Lojas.cidade.ilike('%{}%'.format(pesquisa)),
-            Lojas.endereco.ilike('%{}%'.format(pesquisa)),
-            Lojas.regiao.ilike('%{}%'.format(pesquisa)),
-            Lojas.bairro.ilike('%{}%'.format(pesquisa))
-        )).all()
-
-        return render_template('lojas.html', resultados=resultados)
+        resultados = buscar_lojas(pesquisa)
+        return render_template('buscar_resultados.html', resultados=resultados)
 
     return render_template('lojas.html')
+
+
+@app.route('/search', methods=['POST'])
+def search():
+    pesquisa = request.form['pesquisa']
+    resultados = buscar_lojas(pesquisa)
+    return render_template('buscar_resultados.html', resultados=resultados)
 
 
 
